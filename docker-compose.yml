@@ -1,0 +1,35 @@
+services:
+  django:
+    build:
+      context: ./backend
+    container_name: django
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app/backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - frontend
+    networks:
+      - llm_network
+
+  frontend:
+    container_name: vite_frontend
+    build:
+      context: ./frontend
+    working_dir: /app
+    command: npm run dev -- --host
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - llm_network
+    restart: unless-stopped
+
+networks:
+  llm_network:
+    external: true

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Mentor.IA{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Tailwind (si estás usándolo, si no, lo sacamos) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  {% block head_extra %}{% endblock %}
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans">
+
+  <!-- NAVBAR -->
+  <nav class="bg-gray-900 text-white px-6 py-4 flex justify-between items-center shadow-md">
+    <div class="text-xl font-bold tracking-widest">
+      Mentor.IA
+    </div>
+    <div class="space-x-4">
+      <a href="/" class="hover:underline">Inicio</a>
+      <a href="/agentes/constructor/" class="hover:underline">Constructor</a>
+      <a href="/agentes/codificar/" class="hover:underline">Codificador</a>
+    </div>
+    <button onclick="togglePanel()" class="ml-4 bg-gray-700 px-3 py-1 rounded hover:bg-gray-600">
+      ⚙️ Panel
+    </button>
+  </nav>
+
+  <!-- PANEL LATERAL DERECHO (PLEGABLE) -->
+  <aside id="configPanel" class="fixed top-16 right-0 w-0 h-[calc(100vh-4rem)] bg-white shadow-lg overflow-hidden transition-all duration-300 z-50">
+    <div class="p-4">
+      <h2 class="text-lg font-semibold mb-4">Panel de configuración</h2>
+      <!-- Acá metés settings, logs, métricas, etc -->
+      <p class="text-sm text-gray-600">En construcción... 🔧</p>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="max-w-6xl mx-auto py-10 px-6">
+    {% block content %}
+    <!-- Cada template inyecta su contenido acá -->
+    {% endblock %}
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-white text-center py-4 text-sm">
+    Mentor.IA © {{ year|default:"2025" }} — Hecho con 🧠 y 🛠️ por José
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    function togglePanel() {
+      const panel = document.getElementById('configPanel');
+      if (panel.style.width === '0px' || panel.style.width === '') {
+        panel.style.width = '320px'; // podés ajustar esto
+      } else {
+        panel.style.width = '0px';
+      }
+    }
+  </script>
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>
