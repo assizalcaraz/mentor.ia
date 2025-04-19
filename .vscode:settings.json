@@ -1,0 +1,12 @@
+{
+  "files.associations": {
+    "*.svelte": "svelte"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "[svelte]": {
+    "editor.defaultFormatter": "svelte.svelte-vscode"
+  },
+  "eslint.validate": ["javascript", "svelte"],
+  "prettier.requireConfig": false
+}

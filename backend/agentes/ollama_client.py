@@ -44,7 +44,7 @@ def generar_respuesta_desde_template(tipo, **kwargs):
 def enviar_a_ollama(payload):
     url = f"{OLLAMA_API_URL}/api/generate"
     try:
-        response = requests.post(url, json=payload, timeout=30)
+        response = requests.post(url, json=payload, timeout=90)
         response.raise_for_status()
         data = response.json()
         return data.get("response", "Error: no se recibió respuesta del modelo.")
