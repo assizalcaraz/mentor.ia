@@ -8,7 +8,6 @@ from django.views.decorators.http import require_POST, require_http_methods
 
 
 from .ollama_client import generar_respuesta, generar_respuesta_desde_template
-from .constructor import desglosar_objetivo
 from .prompts import prompt_codigo
 from .context_manager import guardar_interaccion, consultar_contexto
 
@@ -33,7 +32,7 @@ def simular_interaccion(request):
         body = json.loads(request.body)
         print("🧾 Cuerpo recibido:", body)
 
-        agente = body.get("agente", "constructor")
+        agente = body.get("agente", "arquitecto")
         tipo = body.get("tipo", "codigo")
         prompt = body.get("prompt", "simulación de tarea")
         objetivo_id = body.get("objetivo_id", "demo_001")
@@ -85,7 +84,7 @@ def procesar_consulta_llm(request):
             "modelo": modelo
         }
 
-        if tipo == "constructor":
+        if tipo == "arquitecto":
             objetivo = data.get("prompt")
             contexto = data.get("contexto", "")
             kwargs = {"objetivo": objetivo, "contexto": contexto, "temperatura": temperatura, "modelo": modelo}
@@ -107,7 +106,7 @@ def interactuar(request):
     try:
         body = json.loads(request.body)
 
-        tipo = body.get("tipo", "codigo")  # valores posibles: "codigo", "constructor", "evaluacion"
+        tipo = body.get("tipo", "codigo")  # valores posibles: "codigo", "arquitecto", "evaluacion"
         prompt = body.get("prompt", "")
         modelo = body.get("modelo", "codellama:7b-instruct")
         temperatura = float(body.get("temperatura", 0.2))
@@ -118,7 +117,7 @@ def interactuar(request):
                 "modelo": modelo,
                 "temperatura": temperatura
             }
-        elif tipo == "constructor":
+        elif tipo == "arquitecto":
             payload = {
                 "objetivo": prompt,
                 "modelo": modelo,
@@ -169,7 +168,7 @@ def generar_respuesta_llm(request):
 
     return JsonResponse({"respuesta": respuesta})
 
-def constructor_view(request):
+def arquitecto_view(request):
     objetivo = request.GET.get("objetivo", "Crear una app de asistencia con reconocimiento facial")
     contexto = request.GET.get("contexto", "")
     resultado = desglosar_objetivo(objetivo, contexto)
