@@ -1,15 +1,23 @@
 import os
 import requests
 from . import prompts
+from .mock_llm import respuesta_simulada
+
 
 OLLAMA_API_URL = os.getenv("OLLAMA_API_URL", "http://ollama:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "codellama:7b-instruct")
+USAR_MOCKS = os.getenv("USAR_MOCKS", "False").lower() in ("true", "1", "yes")
 
 
-def generar_respuesta(prompt, temperatura=0.2, modelo="codellama:7b-instruct"):
+
+def generar_respuesta(prompt, temperatura=0.2, modelo=None, tipo="codigo", agente="arquitecto"):
+    modelo = modelo or OLLAMA_MODEL
+
+    if USAR_MOCKS:
+        return respuesta_simulada(tipo=tipo, prompt=prompt, agente=agente)
+
     url = f"{OLLAMA_API_URL}/api/generate"
 
-    # Si prompt ya es un dict con todas las claves, no lo empaquetes de nuevo
     payload = prompt if isinstance(prompt, dict) else {
         "model": modelo,
         "prompt": prompt,
@@ -18,7 +26,7 @@ def generar_respuesta(prompt, temperatura=0.2, modelo="codellama:7b-instruct"):
     }
 
     try:
-        response = requests.post(url, json=payload, timeout=30)
+        response = requests.post(url, json=payload, timeout=90)
         response.raise_for_status()
         data = response.json()
         return data.get("response", "Error: no se recibió respuesta del modelo.")
@@ -44,7 +52,7 @@ def generar_respuesta_desde_template(tipo, **kwargs):
 def enviar_a_ollama(payload):
     url = f"{OLLAMA_API_URL}/api/generate"
     try:
-        response = requests.post(url, json=payload, timeout=90)
+        response = requests.post(url, json=payload, timeout=200)
         response.raise_for_status()
         data = response.json()
         return data.get("response", "Error: no se recibió respuesta del modelo.")

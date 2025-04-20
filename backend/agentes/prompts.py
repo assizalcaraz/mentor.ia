@@ -6,6 +6,41 @@ No incluyas texto antes ni después del bloque JSON.
 Asegurate de que sea un JSON parseable por una máquina. 
 """
 
+def prompt_arquitecto(objetivo, contexto="", temperatura=0.2, modelo="codellama:7b-instruct"):
+    full_prompt = f"""{BASE_PROMPT}
+Objetivo: {objetivo}
+{f'Contexto: {contexto}' if contexto else ''}
+
+Devolveme una lista de tareas JSON con los campos:
+- tarea
+- tipo
+- prioridad (1 a 5)
+- depende_de (lista de otras tareas)
+
+Ejemplo:
+[
+  {{
+    "tarea": "Investigar conceptos clave",
+    "tipo": "investigación",
+    "prioridad": 1,
+    "depende_de": []
+  }},
+  {{
+    "tarea": "Escribir resumen",
+    "tipo": "redacción",
+    "prioridad": 2,
+    "depende_de": ["Investigar conceptos clave"]
+  }}
+]
+"""
+    return {
+        "model": modelo,
+        "prompt": full_prompt,
+        "temperature": temperatura,
+        "stream": False
+    }
+
+
 def prompt_codigo(prompt_usuario, temperatura=0.2, modelo="codellama:7b-instruct"):
     prompt = (
         "Respondé solo con el código, en formato JSON si es posible. "
