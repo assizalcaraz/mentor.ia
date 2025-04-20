@@ -1,3 +1,5 @@
+# backend/Dockerfile
+
 FROM python:3.10-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -11,20 +13,20 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Crear directorio de trabajo
-WORKDIR /app/backend
+# ✅ Cambiar directorio de trabajo
+WORKDIR /app
 
-# Copiar dependencias desde raíz del proyecto al contenedor
+# ✅ Copiar requirements
 COPY requirements.txt /app/requirements.txt
 
-# Instalar dependencias
+# Instalar dependencias Python
 RUN pip install --upgrade pip && pip install -r /app/requirements.txt
 
-# Copiar el resto del proyecto (todo mentoria/)
+# ✅ Copiar todo lo demás al contenedor
 COPY . /app/
 
-# Exponer puerto Django
+# Exponer puerto
 EXPOSE 8000
 
-# Ejecutar gunicorn desde backend/
+# Comando de ejecución
 CMD ["gunicorn", "mentoria.wsgi:application", "--bind", "0.0.0.0:8000"]

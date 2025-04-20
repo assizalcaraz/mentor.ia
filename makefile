@@ -1,18 +1,20 @@
 build:
-	docker compose build
+	cd frontend && npm install && npm run build
 
-front:
-	cd frontend && rm -rf dist .svelte-kit && npm run build
+copy:
+	docker cp frontend/dist/. mentoria-nginx-1:/usr/share/nginx/html/
 
-up:
-	docker compose up --build -d
+deploy: build copy
 
-rebuild: front build up
+front-redeploy:
+	cd frontend && rm -rf dist .svelte-kit && npm install && npm run build
+	docker exec -it mentoria-nginx-1 rm -rf /usr/share/nginx/html/*
+	docker cp frontend/dist/. mentoria-nginx-1:/usr/share/nginx/html/
 
-logs:
-	docker compose logs -f
+backend:
+	docker compose down && docker compose down --build -d
+web:
+	make deploy && docker compose up -d
 
-restart:
-	docker compose down && docker compose up -d
-
-ok: rebuild
+force:
+	make front-redeploy && make backend

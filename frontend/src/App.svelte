@@ -1,16 +1,17 @@
 <script>
-  import Router from 'svelte-spa-router';
+  import Router from 'svelte-spa-router'; // ✅ sin llaves
   import routes from './routes.js';
-  import Header from './components/Header.svelte';
+    
+  let mensaje = 'Hola mundo desde Svelte 🎉';
 </script>
 
-<main class="min-h-screen bg-gray-950 text-white font-sans">
-  <Header />
-  <Router {routes} />
+<main class="p-8 text-center text-white bg-gray-900 min-h-screen">
+  <h1 class="text-3xl font-bold">{mensaje}</h1>
+  <Router {routes} />  <!-- ✅ movido dentro del <main> para que herede estilo si querés -->
 </main>
 
 <style>
   main {
-    padding: 2rem;
+    font-family: sans-serif;
   }
 </style>
