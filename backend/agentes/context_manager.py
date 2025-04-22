@@ -4,6 +4,7 @@ import chromadb
 from sentence_transformers import SentenceTransformer
 from datetime import datetime
 import os
+import chromadb
 
 # Ruta de almacenamiento persistente
 CHROMA_PATH = os.getenv("CHROMA_PATH", "./chroma/")
@@ -12,11 +13,25 @@ collection = client.get_or_create_collection("interacciones")
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
-def contexto_compilado(objetivo_id):
-    resultado = collection.get(where={"objetivo_id": objetivo_id})
-    textos = resultado.get("documents", [])
-    return "\n\n".join(textos)
+def listar_objetivos():
+    client = chromadb.PersistentClient(path="chroma/")
+    collection = client.get_or_create_collection("memoria")
+    resultados = collection.get()
 
+    print(f"📊 Objetivos encontrados: {len(resultados['ids'])}")
+    print(resultados["metadatas"])  # Aquí ves los objetivo_id reales
+
+
+def contexto_compilado(objetivo_id):
+    client = chromadb.PersistentClient(path="chroma/")
+    collection = client.get_or_create_collection("memoria")
+    resultados = collection.get(where={"objetivo_id": objetivo_id})
+
+    contexto = ""
+    for texto in resultados.get("documents", []):
+        contexto += texto + "\n---\n"
+    
+    return contexto.strip() or "No se encontraron entradas para este objetivo."
 
 def guardar_interaccion(texto, agente, objetivo_id, fase="inicio"):
     id_doc = f"{agente}_{objetivo_id}_{datetime.now().timestamp()}"

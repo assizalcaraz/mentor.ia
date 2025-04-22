@@ -1,0 +1,113 @@
+{
+  "info": {
+    "name": "MentorIA - Agentes",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Arquitecto - Planificar",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"objetivo\": \"Aprender 5 colores en ingl\\u00e9s\",\n  \"contexto\": \"Ni\\u00f1o de 7 a\\u00f1os que empieza a aprender\",\n  \"objetivo_id\": \"demo_colores_001\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/agentes/arquitecto/planificar/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "agentes",
+            "arquitecto",
+            "planificar"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Simular Interacci\u00f3n",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"probar simulaci\\u00f3n\",\n  \"tipo\": \"codigo\",\n  \"agente\": \"constructor\",\n  \"objetivo_id\": \"demo_colores_001\",\n  \"fase\": \"inicio\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/agentes/simular/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "agentes",
+            "simular"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Consultar Memoria",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"colores en ingl\\u00e9s\",\n  \"objetivo_id\": \"demo_colores_001\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/agentes/memoria/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "agentes",
+            "memoria"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Historial Compilado",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"objetivo_id\": \"demo_colores_001\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/agentes/historial/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "agentes",
+            "historial"
+          ]
+        }
+      }
+    }
+  ]
+}

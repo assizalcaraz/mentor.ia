@@ -13,6 +13,11 @@ Mentor.ia es un entorno de desarrollo modular basado en agentes LLM, diseñado p
 - ✅ Botón de ejecución (`Generar`)
 - ✅ Servido con `nginx` desde contenedor Docker
 - ✅ Backend Django parcialmente configurado
+- ✅ Endpoint `/agentes/arquitecto/planificar/` funcionando con conexión real a `ollama`
+- ✅ Persistencia de tareas generadas en `ChromaDB` con metadata asociada (`objetivo_id`, `fase`, `agente`)
+- ✅ Soporte de mocks configurables desde `.env` (`USE_MOCK=True/False`)
+- ✅ API consultable vía Postman (`MentorIA_Agentes.postman_collection.json`)
+- ✅ Documentación para la colección incluida en `README_postman.md`
 
 ---
 
@@ -26,7 +31,8 @@ mentoria/
 │   └── src/routes/     # dashboard, planificador, sandbox
 ├── nginx/              # nginx.conf personalizado
 ├── docker-compose.yml
-└── .env                # Variables de entorno
+├── .env                # Variables de entorno
+└── README_postman.md   # Documentación de la colección Postman
 ```
 
 ---
@@ -54,17 +60,19 @@ http://localhost/#/dashboard/planificar
   ```
   SECRET_KEY=changeme
   DEBUG=True
+  USE_MOCK=False
   ```
 
 ---
 
 ## ✨ En desarrollo
 
-- Integración con API de agentes (arquitecto, evaluación, asistente)
-- Visualización de respuestas generadas
-- Persistencia en base de datos / logs
-- Panel administrativo (Django Admin)
-- Dashboard de métricas
+- Visualización de tareas generadas en frontend
+- Validación y ejecución de planes por el asistente
+- Transición de fases: planificación → ejecución → evaluación
+- Interfaz tipo tablero para proyectos en curso
+- Rediseño UI/UX para representar tareas pendientes y automáticas
+- Backups de ChromaDB y migraciones Django (`auth`, `sessions`...)
 
 ---
 

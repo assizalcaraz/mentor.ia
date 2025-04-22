@@ -1,9 +1,8 @@
-# agentes/mock_llm.py
-
 import json
 from datetime import datetime
 
 contador = {"valor": 0}
+
 
 def respuesta_simulada(tipo="codigo", prompt="...", agente="arquitecto"):
     contador["valor"] += 1
@@ -20,19 +19,29 @@ def respuesta_simulada(tipo="codigo", prompt="...", agente="arquitecto"):
                 "tarea": "Analizar requerimientos del sistema",
                 "tipo": "investigación",
                 "prioridad": 1,
-                "depende_de": []
+                "depende_de": [],
+                "actor": "usuario"
             },
             {
                 "tarea": "Diseñar arquitectura básica",
                 "tipo": "programación",
                 "prioridad": 2,
-                "depende_de": ["Analizar requerimientos del sistema"]
+                "depende_de": ["Analizar requerimientos del sistema"],
+                "actor": "asistente"
             },
             {
                 "tarea": "Configurar entorno de desarrollo",
                 "tipo": "infraestructura",
                 "prioridad": 3,
-                "depende_de": []
+                "depende_de": [],
+                "actor": "asistente"
+            },
+            {
+                "tarea": "Presentar cronograma tentativo al usuario",
+                "tipo": "comunicación",
+                "prioridad": 4,
+                "depende_de": ["Diseñar arquitectura básica"],
+                "actor": "usuario"
             }
         ], indent=2)
 

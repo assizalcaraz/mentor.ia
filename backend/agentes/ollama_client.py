@@ -9,6 +9,13 @@ OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "codellama:7b-instruct")
 USAR_MOCKS = os.getenv("USAR_MOCKS", "False").lower() in ("true", "1", "yes")
 
 
+def verificar_config():
+    print("🔍 Verificando configuración de entorno:")
+    print(f"   OLLAMA_API_URL: {OLLAMA_API_URL}")
+    print(f"   OLLAMA_MODEL: {OLLAMA_MODEL}")
+    print(f"   USAR_MOCKS (interpreted): {USAR_MOCKS}")
+    print(f"   USAR_MOCKS (raw): {os.getenv('USAR_MOCKS')}")
+
 
 def generar_respuesta(prompt, temperatura=0.2, modelo=None, tipo="codigo", agente="arquitecto"):
     modelo = modelo or OLLAMA_MODEL
@@ -49,7 +56,11 @@ def generar_respuesta_desde_template(tipo, **kwargs):
     return enviar_a_ollama(payload)
 
 
-def enviar_a_ollama(payload):
+def enviar_a_ollama(payload, tipo="codigo", agente="arquitecto"):
+    if USAR_MOCKS:
+        print("⚙️ Modo MOCK activado: respuesta simulada.")
+        return respuesta_simulada(tipo=tipo, prompt=payload.get("prompt", ""), agente=agente)
+
     url = f"{OLLAMA_API_URL}/api/generate"
     try:
         response = requests.post(url, json=payload, timeout=200)

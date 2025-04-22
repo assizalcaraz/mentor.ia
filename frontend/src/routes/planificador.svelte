@@ -23,7 +23,8 @@
       if (!res.ok) {
         error = data.error || 'Error desconocido';
       } else {
-        resultado = data.plan;
+        resultado = { ...data.plan, objetivo_id: data.objetivo_id };
+
       }
     } catch (err) {
       error = 'Error al conectar con el backend';
@@ -32,6 +33,29 @@
       loading = false;
     }
   }
+
+  async function validarPlan() {
+    try {
+      const res = await fetch('/agentes/simular/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          agente: 'asistente',
+          tipo: 'asistente',
+          prompt: `Ejecutar plan generado para: ${resultado.objetivo}`,
+          objetivo_id: resultado.objetivo_id,
+          fase: 'ejecucion'
+        })
+      });
+
+      const data = await res.json();
+      alert("✅ Asistente activado. Tarea simulada: " + data.respuesta);
+    } catch (err) {
+      alert("❌ Error al validar el plan");
+      console.error(err);
+    }
+  }
+
 </script>
 
 <main class="p-6 max-w-3xl mx-auto text-white">
@@ -70,9 +94,9 @@
         {/each}
       </ul>
 
-      <button class="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white">
+      <button on:click={validarPlan} class="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white">
         Validar plan y continuar ➡️
-      </button>
+      </button>      
     </div>
   {/if}
 </main>

@@ -7,3 +7,4 @@ python-decouple
 django-cors-headers>=4.0
 chromadb
 sentence-transformers
+django-cors-headers

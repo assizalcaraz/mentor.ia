@@ -1,13 +1,15 @@
 import json
 import datetime
-from .ollama_client import generar_respuesta, enviar_a_ollama
+from .ollama_client import generar_respuesta, enviar_a_ollama, verificar_config
 
 from .prompts import prompt_arquitecto
 
 def generar_plan_estructurado(objetivo: str, contexto: str = "") -> dict:
+    verificar_config()
     payload = prompt_arquitecto(objetivo=objetivo, contexto=contexto)
 
-    respuesta = enviar_a_ollama(payload)
+    respuesta = enviar_a_ollama(payload, tipo="arquitecto", agente="arquitecto")
+
     print("📦 Respuesta cruda del modelo:\n", respuesta)
 
     try:

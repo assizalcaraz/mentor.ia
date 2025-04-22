@@ -5,22 +5,45 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_http_methods
 
-
-
 from .ollama_client import generar_respuesta, generar_respuesta_desde_template
 from .prompts import prompt_codigo
 from .context_manager import guardar_interaccion, consultar_contexto
 
+from .models import Objetivo
+from django.core.serializers.json import DjangoJSONEncoder
 
 @csrf_exempt
 def historial_compilado(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Sólo se permiten solicitudes POST."}, status=405)
+
     try:
-        body = json.loads(request.body)
-        objetivo_id = body.get("objetivo_id", "demo_001")
-        from .context_manager import contexto_compilado
-        texto = contexto_compilado(objetivo_id)
-        return JsonResponse({"contexto": texto})
+        objetivos = Objetivo.objects.all().order_by("-fecha_creacion")
+        lista = []
+
+        for obj in objetivos:
+            roadmap = obj.roadmaps.order_by("-fecha_generacion").first()
+            tareas = []
+            if roadmap:
+                tareas = list(roadmap.tareas.values(
+                    "id", "tarea", "tipo", "prioridad", "depende_de", "actor"
+                ))
+
+            lista.append({
+                "id": obj.id,
+                "titulo": obj.titulo,
+                "descripcion": obj.descripcion,
+                "prioridad": obj.prioridad,
+                "fecha_creacion": obj.fecha_creacion.isoformat(),
+                "roadmap_id": roadmap.id if roadmap else None,
+                "tareas": tareas
+            })
+
+        return JsonResponse({"objetivos": lista}, encoder=DjangoJSONEncoder, safe=False)
+
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
 
 

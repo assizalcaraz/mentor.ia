@@ -11,25 +11,28 @@ def prompt_arquitecto(objetivo, contexto="", temperatura=0.2, modelo="codellama:
 Objetivo: {objetivo}
 {f'Contexto: {contexto}' if contexto else ''}
 
-Devolveme una lista de tareas JSON con los campos:
-- tarea
-- tipo
-- prioridad (1 a 5)
-- depende_de (lista de otras tareas)
+Devolveme una lista de tareas en formato JSON con los siguientes campos:
+- tarea: descripción corta de la acción
+- tipo: ['investigación', 'redacción', 'configuración', etc.]
+- prioridad: número del 1 (alta) al 5 (baja)
+- depende_de: lista de otras tareas si aplica
+- actor: "usuario" o "asistente" según quien debe ejecutar la tarea
 
-Ejemplo:
+Ejemplo de salida:
 [
   {{
-    "tarea": "Investigar conceptos clave",
-    "tipo": "investigación",
+    "tarea": "Seleccionar fotos para perfil de LinkedIn",
+    "tipo": "selección",
     "prioridad": 1,
-    "depende_de": []
+    "depende_de": [],
+    "actor": "usuario"
   }},
   {{
-    "tarea": "Escribir resumen",
+    "tarea": "Redactar post de presentación",
     "tipo": "redacción",
     "prioridad": 2,
-    "depende_de": ["Investigar conceptos clave"]
+    "depende_de": ["Seleccionar fotos para perfil de LinkedIn"],
+    "actor": "asistente"
   }}
 ]
 """
@@ -39,6 +42,7 @@ Ejemplo:
         "temperature": temperatura,
         "stream": False
     }
+
 
 
 def prompt_codigo(prompt_usuario, temperatura=0.2, modelo="codellama:7b-instruct"):
