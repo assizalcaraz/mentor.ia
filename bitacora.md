@@ -1,5 +1,60 @@
 # 🧠 Bitácora de Desarrollo — Proyecto Mentor.IA
 
+## 📅 Fecha: 2025-04-22  
+### Versión: v0.4 — Objetivos persistentes y Roadmap conectado
+
+---
+
+### ✅ Funcionalidades implementadas
+
+- Modelo `Objetivo`, `Roadmap` y `Tarea` en Django con migraciones aplicadas.
+- Endpoint `/agentes/arquitecto/planificar/` modificado para crear:
+  - Objetivo si no existe.
+  - Roadmap asociado.
+  - Tareas persistentes en base de datos.
+- Se mantiene compatibilidad con ChromaDB para trazabilidad semántica.
+- Vista `dashboard.svelte` adaptada para mostrar objetivos con roadmap más reciente.
+- Planificador Svelte estilizado con Tailwind extendido.
+
+---
+
+### ⚙️ Infraestructura
+
+- Validación de persistencia real en ChromaDB (`chroma/`).
+- Confirmación de uso de mocks mediante `.env` (`USAR_MOCKS=true`).
+- Estilizado base unificado desde `App.svelte` como plantilla principal.
+- Configuración extendida de `tailwind.config.js`.
+
+---
+
+### 🧪 Verificaciones
+
+- Planificación desde el frontend genera correctamente datos en DB y Chroma.
+- Dashboard lista y muestra detalles sin errores.
+- Mock activo y funcional para pruebas offline.
+- Validación visual de persistencia en contenedor `postgres` y carpeta `chroma`.
+
+---
+
+### 🔧 Pendientes
+
+- Implementar acción real para botón "Validar plan".
+- Dashboard debe permitir edición o marcación de tareas completadas.
+- Falta vista timeline para múltiples roadmaps por objetivo.
+- Historial semántico aún no cruzado con modelos Django.
+
+---
+
+### 🧭 Siguientes pasos sugeridos
+
+1. Activar validación de plan como transición de fase.
+2. Mostrar fecha, estado y cantidad de tareas por objetivo.
+3. Permitir filtrar objetivos por agente (asistente, usuario).
+4. Crear endpoint `/objetivos/` para consumir desde frontend todos los modelos.
+5. Preparar backup completo de modelos y embeddings para compartir datasets.
+
+3
+
 ## 📅 Fecha: 2025-04-20  
 ### Versión: v0.3 — Agente Arquitecto y Roadmap LLM
 

@@ -1,5 +1,4 @@
 # backend/agentes/urls_api.py
-
 from django.urls import path
 from .views import (
     simular_interaccion,
@@ -13,6 +12,15 @@ from .views import (
 from .views_arquitecto import (
     planificar_objetivo,
 )
+from .views_asistente import (
+    ejecutar_tareas,
+
+)
+
+from tools.views_tools import (
+    limpiar_base,
+    
+)
 
 urlpatterns = [
     path("simular/", simular_interaccion, name="simular_interaccion"),
@@ -23,4 +31,10 @@ urlpatterns = [
     path("generar/", generar_respuesta_llm, name="generar_respuesta"),
     path("arquitecto/", arquitecto_view, name="arquitecto_view"),
     path("arquitecto/planificar/", planificar_objetivo, name="planificar_objetivo"),
+    path("asistente/ejecutar/", ejecutar_tareas, name="ejecutar_tareas_asistente"),
+    path("tools/limpiar_base/", limpiar_base, name="limpiar_base"),
+
+
+
+
 ]

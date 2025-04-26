@@ -1,7 +1,6 @@
 import json
 import datetime
 from .ollama_client import generar_respuesta, enviar_a_ollama, verificar_config
-
 from .prompts import prompt_arquitecto
 
 def generar_plan_estructurado(objetivo: str, contexto: str = "") -> dict:

@@ -1,0 +1,114 @@
+{
+  "info": {
+    "name": "Mentor.IA API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Planificar objetivo (Arquitecto)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/agentes/arquitecto/planificar/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "agentes",
+            "arquitecto",
+            "planificar"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"objetivo\": \"Crear un sistema de control de asistencia\",\n  \"contexto\": \"Sistema para registrar asistencia en aulas mediante QR\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Ejecutar tareas (Asistente)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/agentes/asistente/ejecutar/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "agentes",
+            "asistente",
+            "ejecutar"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"roadmap_id\": 1\n}"
+        }
+      }
+    },
+    {
+      "name": "Consultar memoria",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/agentes/memoria/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "agentes",
+            "memoria"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"\\u00bfQu\\u00e9 tareas est\\u00e1n planificadas?\",\n  \"objetivo_id\": \"id_objetivo\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Consultar historial",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/agentes/historial/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "agentes",
+            "historial"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        }
+      }
+    }
+  ]
+}

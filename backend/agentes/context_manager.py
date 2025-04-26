@@ -60,4 +60,16 @@ def consultar_contexto(prompt, objetivo_id=None, top_k=5):
         n_results=top_k,
         where=where if where else None
     )
-    return resultado.get("documents", [])
+    
+    documentos = resultado.get("documents", [])
+    documentos_parseados = []
+
+    for doc in documentos:
+        try:
+            # Intentamos parsear a JSON
+            documentos_parseados.append(json.loads(doc))
+        except json.JSONDecodeError:
+            # Si no es JSON válido, dejamos como string
+            documentos_parseados.append(doc)
+
+    return documentos_parseados

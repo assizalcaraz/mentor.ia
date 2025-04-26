@@ -22,38 +22,46 @@
   }
 </script>
 
-<div class="flex h-screen bg-gray-900 text-white">
-  <!-- Panel lateral -->
-  <aside class="w-64 p-4 bg-gray-800 border-r border-gray-700 overflow-y-auto">
-    <h2 class="text-lg font-bold mb-4">📁 Objetivos</h2>
-    {#each objetivos as obj}
-      <button class="block w-full text-left p-2 mb-2 rounded hover:bg-gray-700"
-              on:click={() => verObjetivo(obj)}>
-        {obj.titulo}
-        <div class="text-xs text-gray-400">{obj.fecha_creacion.slice(0, 10)}</div>
-      </button>
-    {/each}
+<div class="flex h-screen bg-gray-950 text-white">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-gray-900 p-5 border-r border-gray-800 shadow-md">
+    <h2 class="text-xl font-bold mb-6">📂 Objetivos</h2>
+    <div class="space-y-3">
+      {#each objetivos as obj}
+        <button
+          class="w-full text-left bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg shadow-sm transition"
+          on:click={() => verObjetivo(obj)}>
+          <div class="font-semibold">{obj.titulo}</div>
+          <div class="text-xs text-gray-400">{obj.fecha_creacion.slice(0, 10)}</div>
+        </button>
+      {/each}
+    </div>
   </aside>
 
-  <!-- Panel principal -->
-  <main class="flex-1 p-6 overflow-y-auto">
+  <!-- Main Panel -->
+  <main class="flex-1 px-10 py-8 overflow-y-auto">
     {#if seleccionado}
-      <h2 class="text-2xl font-bold mb-2">{seleccionado.titulo}</h2>
-      <p class="text-gray-400 italic mb-4">{seleccionado.descripcion}</p>
+      <div class="bg-gray-900 p-6 rounded-lg shadow-lg border border-gray-800">
+        <h2 class="text-3xl font-bold mb-2 text-green-400">{seleccionado.titulo}</h2>
+        <p class="text-gray-400 mb-6 italic">{seleccionado.descripcion}</p>
 
-      <h3 class="font-semibold mb-2">Tareas del roadmap más reciente:</h3>
-      <ul class="list-disc pl-6 space-y-2 text-sm">
-        {#each seleccionado.tareas as tarea}
-          <li>
-            <strong>{tarea.tarea}</strong> – {tarea.tipo}, prioridad {tarea.prioridad}
-            {#if tarea.depende_de.length > 0}
-              <div class="text-xs text-gray-400">↳ depende de: {tarea.depende_de.join(', ')}</div>
-            {/if}
-          </li>
-        {/each}
-      </ul>
+        <h3 class="text-xl font-semibold mb-4 text-blue-400">Tareas del roadmap más reciente</h3>
+        <ul class="space-y-3 text-sm">
+          {#each seleccionado.tareas as tarea}
+            <li class="bg-gray-800 p-3 rounded-lg border border-gray-700">
+              <div class="font-semibold text-white">{tarea.tarea}</div>
+              <div class="text-gray-400">
+                {tarea.tipo} • prioridad {tarea.prioridad}
+              </div>
+              {#if tarea.depende_de.length > 0}
+                <div class="text-xs text-gray-500 mt-1">↳ depende de: {tarea.depende_de.join(', ')}</div>
+              {/if}
+            </li>
+          {/each}
+        </ul>
+      </div>
     {:else}
-      <p class="text-gray-400">Selecciona un objetivo para ver los detalles.</p>
+      <p class="text-gray-500 text-lg">Selecciona un objetivo del panel lateral para ver los detalles.</p>
     {/if}
   </main>
 </div>

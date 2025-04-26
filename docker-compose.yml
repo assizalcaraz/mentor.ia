@@ -10,6 +10,7 @@ services:
       - llm_network
 
   django:
+    container_name: django
     build:
       context: ./backend
 

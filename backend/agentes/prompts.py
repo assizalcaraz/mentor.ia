@@ -21,20 +21,21 @@ Devolveme una lista de tareas en formato JSON con los siguientes campos:
 Ejemplo de salida:
 [
   {{
-    "tarea": "Seleccionar fotos para perfil de LinkedIn",
-    "tipo": "selección",
+    "tarea": "Definir requerimientos iniciales",
+    "tipo": "investigación",
     "prioridad": 1,
     "depende_de": [],
     "actor": "usuario"
   }},
   {{
-    "tarea": "Redactar post de presentación",
-    "tipo": "redacción",
+    "tarea": "Prototipar solución propuesta",
+    "tipo": "programación",
     "prioridad": 2,
-    "depende_de": ["Seleccionar fotos para perfil de LinkedIn"],
+    "depende_de": ["Definir requerimientos iniciales"],
     "actor": "asistente"
   }}
 ]
+
 """
     return {
         "model": modelo,
