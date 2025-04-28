@@ -18,6 +18,9 @@ services:
 
     volumes:
       - ./backend:/app
+      - ./backup_chroma_onnx_models:/root/.cache/chroma/onnx_models
+
+
     ports:
       - "8000:8000"
     networks:

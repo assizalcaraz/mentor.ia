@@ -5,7 +5,7 @@ from .mock_llm import respuesta_simulada
 
 
 OLLAMA_API_URL = os.getenv("OLLAMA_API_URL", "http://ollama:11434")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "codellama:7b-instruct")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL")
 USAR_MOCKS = os.getenv("USAR_MOCKS", "False").lower() in ("true", "1", "yes")
 
 

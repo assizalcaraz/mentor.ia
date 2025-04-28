@@ -1,72 +1,79 @@
-<script context="module">
-  export async function load({ params }) {
-    const res = await fetch("http://localhost:8000/agentes/memoria/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ objetivo_id: params.id })
-    });
-    const data = await res.json();
-    return { props: { objetivoId: params.id, resultados: data.resultados || [] } };
-  }
-</script>
-
 <script>
-  export let objetivoId;
-  export let resultados;
+  import { onMount } from 'svelte';
+  import { params } from 'svelte-spa-router';
 
-  async function desarrollarTarea(tarea) {
-    const res = await fetch("http://localhost:8000/agentes/simular/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        agente: tarea.agente,
-        tipo: "codigo",
-        prompt: tarea.tarea || tarea.texto || "Desarrollar paso",
-        objetivo_id: objetivoId,
-        fase: "desarrollo"
-      })
-    });
+  let objetivo = {};
+  let tareas = [];
+  let id = '';
+  let error = '';
+  let cargandoTareas = true;
 
-    const data = await res.json();
-    alert("Respuesta almacenada: " + (data.respuesta || data.error));
-    location.reload();
-  }
+  onMount(async () => {
+    id = params.id;
+
+    if (!id) {
+      error = '⚠️ No se pudo determinar el ID del objetivo.';
+      cargandoTareas = false;
+      return;
+    }
+
+    console.log("🌟 ID detectado:", id);
+
+    try {
+      const res = await fetch(`/api/arquitecto/obtener_objetivo/${id}/`);
+      if (!res.ok) throw new Error('No se pudo obtener el objetivo');
+      objetivo = await res.json();
+      console.log("📥 Objetivo cargado:", objetivo);
+
+      if (objetivo.roadmap_id) {
+        const tareasRes = await fetch(`/api/roadmaps/${objetivo.roadmap_id}/tareas/`);
+        if (tareasRes.ok) {
+          tareas = await tareasRes.json();
+          console.log("📋 Tareas cargadas:", tareas);
+        } else {
+          console.warn('⚠️ No se pudieron cargar las tareas.');
+          tareas = [];
+        }
+      } else {
+        console.warn('⚠️ El objetivo no tiene roadmap asociado.');
+      }
+    } catch (err) {
+      console.error('❌ Error cargando datos:', err);
+      error = err.message || 'Error inesperado';
+    } finally {
+      cargandoTareas = false;
+    }
+  });
 </script>
 
-<main class="max-w-4xl mx-auto p-6 space-y-6">
-  <h1 class="text-3xl font-bold text-white">📌 Objetivo: {objetivoId}</h1>
-
-  {#if resultados.length === 0}
-    <p class="text-yellow-300">No se encontraron tareas relacionadas a este objetivo.</p>
+<div class="p-6">
+  {#if error}
+    <p class="text-red-500 font-semibold">⚠️ {error}</p>
   {:else}
-    <div class="space-y-4">
-      {#each resultados as r}
-        <div class="bg-gray-800 text-white p-4 rounded-xl shadow space-y-1">
-          <p><strong>Fase:</strong> {r.metadatos.fase}</p>
-          <p><strong>Agente:</strong> {r.metadatos.agente}</p>
-          <p><strong>Contenido:</strong> {r.contenido.tarea || r.contenido.texto || "[Sin contenido]"}</p>
+    <h1 class="text-3xl font-bold mb-4">{objetivo.titulo || 'Objetivo no disponible'}</h1>
+    <p class="text-gray-400 mb-6">{objetivo.descripcion || 'Sin descripción disponible.'}</p>
 
-          {#if r.metadatos.fase === 'planificacion'}
-            <button class="mt-2 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" on:click={() => desarrollarTarea(r.contenido)}>
-              🚀 Desarrollar tarea
-            </button>
-          {/if}
-        </div>
-      {/each}
+    <div class="mt-8">
+      <h2 class="text-2xl font-semibold mb-4">🧩 Lista de Tareas del Roadmap</h2>
+
+      {#if cargandoTareas}
+        <p class="text-gray-400 italic animate-pulse">⌛ Cargando tareas...</p>
+      {:else if tareas && tareas.length > 0}
+        <ul class="list-disc pl-6 space-y-2">
+          {#each tareas.filter(t => t && t.id) as tarea (tarea.id)}
+            <li>
+              <strong>{tarea.tarea}</strong> — {tarea.tipo}, prioridad {tarea.prioridad}
+              {#if tarea.depende_de && tarea.depende_de.length > 0}
+                <div class="text-xs text-gray-400">
+                  ↳ Depende de: {tarea.depende_de.join(', ')}
+                </div>
+              {/if}
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <p class="text-gray-400 italic">🚧 No hay tareas asignadas todavía.</p>
+      {/if}
     </div>
   {/if}
-
-  {#if r.metadatos.fase === 'desarrollo'}
-  <div class="mt-2 p-3 bg-gray-700 rounded">
-    <p class="text-green-300"><strong>Respuesta generada:</strong></p>
-    <pre class="text-white">{JSON.stringify(r.contenido, null, 2)}</pre>
-  </div>
-{/if}
-
-</main>
-
-<style>
-  main {
-    font-family: system-ui, sans-serif;
-  }
-</style>
+</div>
