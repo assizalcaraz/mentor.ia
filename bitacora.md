@@ -1,5 +1,66 @@
 # 🧠 Bitácora de Desarrollo — Proyecto Mentor.IA
 
+## 📅 Fecha: 2025-04-29  
+### Versión: v0.5 — Vista de Objetivo dinámica y descarga segura de modelos
+
+---
+
+### ✅ Funcionalidades implementadas
+
+- Implementado endpoint `GET /api/arquitecto/obtener_objetivo/<id>/` para devolver metadata completa de un objetivo.
+- Vista dinámica `/dashboard/objetivo/:id` ahora renderiza correctamente:
+  - Título, descripción, prioridad, fecha, y check-in del objetivo.
+  - Tareas asociadas al roadmap si existen.
+- Captura segura de parámetros `params.id` desde `svelte-spa-router` usando `export let params`.
+- Corrección de redirección post-objetivo creado: navegación correcta hacia `/dashboard/objetivo/:id`.
+- Validación de errores y estados cargando/error en el frontend (`⌛`, `❌`, `🚧`).
+
+---
+
+### ⚙️ Infraestructura
+
+- Instalación y testeo del modelo ONNX `all-MiniLM-L6-v2` con persistencia local.
+- Se creó script `preload_models.py` para forzar descarga segura dentro del contenedor Django.
+- Montaje persistente de `/root/.cache/chroma/onnx_models` vía volumen Docker (`backup_chroma_onnx_models/`).
+- Limpieza del repositorio: exclusión vía `.gitignore` de `chroma_db` y backups de modelos ONNX.
+- Confirmación de correcto acceso desde Nginx hacia rutas `/api/arquitecto/obtener_objetivo/:id`.
+
+---
+
+### 🧪 Verificaciones
+
+- Verificación manual desde el navegador de flujo completo:
+  - Creación de objetivo.
+  - Redirección automática a `/dashboard/objetivo/:id`.
+  - Carga asincrónica de datos del objetivo y su roadmap.
+- Confirmación de respuesta en formato JSON válido desde el backend.
+- Verificación de `params.id` recibido correctamente como prop.
+- Test de navegación desde distintos navegadores (incl. iPhone/Safari y MacOS/Chrome).
+- Confirmación de persistencia de modelos en volumen montado y ejecución limpia del preload.
+
+---
+
+### 🔧 Pendientes
+
+- Crear endpoint `/api/roadmaps/<id>/tareas/` para completar carga de tareas del roadmap.
+- Mostrar tareas pendientes directamente en la vista de objetivo (ya está esbozado el bucle `#each`).
+- Marcar tareas como completadas desde frontend.
+- Incorporar fallback para vista vacía sin roadmap o sin tareas.
+- Unificar estilos visuales entre Planificador y Detalle de Objetivo.
+- Preparar vista `/dashboard/` general con cards para todos los objetivos existentes.
+
+---
+
+### 🧭 Siguientes pasos sugeridos
+
+1. Implementar y testear `/api/roadmaps/<id>/tareas/`.
+2. Crear `dashboard/index.svelte` para listar objetivos como tarjetas clickeables.
+3. Establecer acciones básicas de tareas: completar, editar, eliminar.
+4. Agregar paginación o scroll virtual si se acumulan muchos objetivos.
+5. Implementar backup automático de `chroma_db/` antes de `docker-compose down`.
+6. Iniciar sistema de versiones e historial para cada objetivo.
+
+
 ## 📅 Fecha: 2025-04-22  
 ### Versión: v0.4 — Objetivos persistentes y Roadmap conectado
 
