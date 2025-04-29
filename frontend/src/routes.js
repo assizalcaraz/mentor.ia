@@ -6,3 +6,5 @@ export default {
   '/dashboard/objetivo/:id': ObjetivoDetalle,
   // Podés agregar más rutas después si querés (por ejemplo `/dashboard/roadmaps`)
 };
+
+

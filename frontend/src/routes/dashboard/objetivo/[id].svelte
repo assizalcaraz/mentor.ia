@@ -1,15 +1,16 @@
 <script>
-  import { onMount } from 'svelte';
-  import { params } from 'svelte-spa-router';
+  export let params;
 
+  import { onMount } from 'svelte';
+
+  let id = '';
   let objetivo = {};
   let tareas = [];
-  let id = '';
-  let error = '';
   let cargandoTareas = true;
+  let error = '';
 
   onMount(async () => {
-    id = params.id;
+    id = params?.id;
 
     if (!id) {
       error = '⚠️ No se pudo determinar el ID del objetivo.';
@@ -17,34 +18,25 @@
       return;
     }
 
-    console.log("🌟 ID detectado:", id);
-
     try {
       const res = await fetch(`/api/arquitecto/obtener_objetivo/${id}/`);
       if (!res.ok) throw new Error('No se pudo obtener el objetivo');
       objetivo = await res.json();
-      console.log("📥 Objetivo cargado:", objetivo);
 
       if (objetivo.roadmap_id) {
         const tareasRes = await fetch(`/api/roadmaps/${objetivo.roadmap_id}/tareas/`);
-        if (tareasRes.ok) {
-          tareas = await tareasRes.json();
-          console.log("📋 Tareas cargadas:", tareas);
-        } else {
-          console.warn('⚠️ No se pudieron cargar las tareas.');
-          tareas = [];
-        }
-      } else {
-        console.warn('⚠️ El objetivo no tiene roadmap asociado.');
+        tareas = tareasRes.ok ? await tareasRes.json() : [];
       }
     } catch (err) {
       console.error('❌ Error cargando datos:', err);
-      error = err.message || 'Error inesperado';
+      error = err.message;
     } finally {
       cargandoTareas = false;
     }
   });
 </script>
+
+
 
 <div class="p-6">
   {#if error}

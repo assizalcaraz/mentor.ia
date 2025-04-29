@@ -2,6 +2,8 @@
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+
 from django.utils import timezone
 import json
 import traceback
@@ -11,6 +13,8 @@ from .arquitecto import generar_plan_estructurado
 from .chroma_manager import guardar_checkin, guardar_tarea, eliminar_objetivo_vectores
 from .ollama_client import verificar_config
 from .arquitecto_checkin import checkin_arquitecto
+
+
 
 @csrf_exempt
 def crear_objetivo(request):
@@ -102,11 +106,8 @@ def crear_objetivo(request):
             "detalle": str(e)
         }, status=500)
 
-@csrf_exempt
+@require_http_methods(["GET"])
 def obtener_objetivo(request, objetivo_id):
-    if request.method != "GET":
-        return JsonResponse({"error": "Método no permitido."}, status=405)
-
     try:
         objetivo = Objetivo.objects.get(id=objetivo_id)
         primer_roadmap = objetivo.roadmaps.first()
@@ -116,11 +117,11 @@ def obtener_objetivo(request, objetivo_id):
             "titulo": objetivo.titulo,
             "descripcion": objetivo.descripcion,
             "prioridad": objetivo.prioridad,
-            "fecha_creacion": objetivo.fecha_creacion,
+            "fecha_creacion": objetivo.fecha_creacion.isoformat() if objetivo.fecha_creacion else None,
             "checkin": objetivo.checkin_data,
             "roadmap_id": primer_roadmap.id if primer_roadmap else None
         }
-        return JsonResponse(data, safe=False)
+        return JsonResponse(data)
 
     except Objetivo.DoesNotExist:
         return JsonResponse({"error": "Objetivo no encontrado."}, status=404)

@@ -42,6 +42,11 @@ urlpatterns = [
     path("roadmaps/<int:roadmap_id>/tareas/", obtener_tareas_roadmap, name="obtener_tareas_roadmap"),
 
 
+
+
+
+
+
     # Asistente
     path("asistente/ejecutar/", ejecutar_tareas, name="ejecutar_tareas_asistente"),
 
