@@ -1,63 +1,92 @@
-# 🧠 Mentor.ia
+# 🧐 Mentor.IA
 
-Mentor.ia es un entorno de desarrollo modular basado en agentes LLM, diseñado para funcionar tanto online como offline. Esta versión integra un **frontend en Svelte** y un **backend en Django**, todo orquestado mediante Docker.
+Mentor.IA es un sistema modular de planificación y ejecución de proyectos basado en agentes LLM interconectados. Funciona tanto online como offline y está construido sobre **Django**, **Svelte**, **Docker**, **Nginx**, **ChromaDB** y **Ollama**.
 
 ---
 
 ## 🔧 Estado actual
 
-- ✅ Frontend con Svelte y `svelte-spa-router`
-- ✅ Navegación funcional (`/#/dashboard/planificar`)
-- ✅ Dropdown para seleccionar agentes (`evaluacion`, `arquitecto`, `asistente`)
-- ✅ Inputs dinámicos: `prompt`, `temperatura`
-- ✅ Botón de ejecución (`Generar`)
-- ✅ Servido con `nginx` desde contenedor Docker
-- ✅ Backend Django parcialmente configurado
-- ✅ Endpoint `/agentes/arquitecto/planificar/` funcionando con conexión real a `ollama`
-- ✅ Persistencia de tareas generadas en `ChromaDB` con metadata asociada (`objetivo_id`, `fase`, `agente`)
-- ✅ Soporte de mocks configurables desde `.env` (`USE_MOCK=True/False`)
-- ✅ API consultable vía Postman (`MentorIA_Agentes.postman_collection.json`)
-- ✅ Documentación para la colección incluida en `README_postman.md`
+- ✅ **Frontend** SPA en Svelte + `vite` + `svelte-spa-router`.
+- ✅ **Backend Django** con modelos `Objetivo`, `Roadmap`, `Tarea`.
+- ✅ **Persistencia de datos** en PostgreSQL y ChromaDB.
+- ✅ **Embeddings** locales usando `PersistentClient(path="chroma_db")`.
+- ✅ **Infraestructura Docker** funcional.
+- ✅ **Proxy Nginx** sirviendo frontend y backend.
+- ✅ **Integración con Ollama** para generación LLM (`tinyllama`, `codellama`).
+- ✅ **Routing SPA** corregido y validado.
+- ✅ **APIs RESTful** para agentes: arquitecto, asistente, revisor.
 
 ---
 
-## 📁 Estructura del proyecto
+## 💾 Estructura del proyecto
 
 ```
 mentoria/
 ├── backend/            # Backend Django
-│   └── agentes/        # App principal con vistas por agente
+│   ├── agentes/        # App de agentes inteligentes
+│   ├── chroma_db/      # Base de datos local para embeddings
+│   ├── mentoria/       # Configuración Django
+│   └── manage.py
 ├── frontend/           # Frontend Svelte + SPA
-│   └── src/routes/     # dashboard, planificador, sandbox
+│   └── src/routes/     # dashboard, planificador, vistas dinámicas
 ├── nginx/              # nginx.conf personalizado
-├── docker-compose.yml
+├── docker-compose.yml  # Orquestación Docker
 ├── .env                # Variables de entorno
-└── README_postman.md   # Documentación de la colección Postman
+├── README_postman.md   # Documentación de la colección Postman
+├── bitacora.md         # Registro de desarrollo
+└── README.md           # (este documento)
 ```
 
 ---
 
-## 🚀 Comandos útiles
+## 🌐 Arquitectura general
+
+```mermaid
+graph TD;
+    A[Usuario] -->|Browser| B(Svelte SPA)
+    B -->|API| C(Nginx Proxy)
+    C -->|/api/| D(Django Backend)
+    D --> E[PostgreSQL DB]
+    D --> F[ChromaDB Embeddings]
+    D --> G[Ollama LLM Server]
+```
+
+---
+
+## 📢 Endpoints disponibles
+
+| Método | Endpoint                          | Descripción                                    |
+|:--------|:----------------------------------|:-----------------------------------------------|
+| POST    | `/api/arquitecto/crear_objetivo/` | Crear un nuevo objetivo y roadmap asociado    |
+| POST    | `/api/asistente/checkin/`         | Validar progreso en tareas asignadas          |
+| POST    | `/api/agentes/memoria/`            | Consultar documentos relevantes en ChromaDB   |
+| POST    | `/api/agentes/historial/`          | Recuperar historial textual completo          |
+
+*(Más detalles en `README_postman.md`)*
+
+---
+
+## 💡 Comandos útiles
 
 ```bash
-# Build & deploy
+# Build y despliegue completo
 make force
 
 # Solo frontend
 make front-redeploy
 
-# Ver frontend en navegador
+# Acceso en navegador (local)
 http://localhost/#/dashboard/planificar
 ```
 
 ---
 
-## 🐳 Requisitos
+## 🛠️ Requisitos
 
 - Docker y Docker Compose
-- Node.js (si vas a desarrollar el frontend fuera del contenedor)
-- `.env` en la raíz con:
-  ```
+- Node.js (solo si desarrollas frontend fuera del contenedor)
+- Archivo `.env` en la raíz:
+  ```bash
   SECRET_KEY=changeme
   DEBUG=True
   USE_MOCK=False
@@ -65,23 +94,23 @@ http://localhost/#/dashboard/planificar
 
 ---
 
-## ✨ En desarrollo
+## 🔄 Roadmap en desarrollo
 
-- Visualización de tareas generadas en frontend
-- Validación y ejecución de planes por el asistente
-- Transición de fases: planificación → ejecución → evaluación
-- Interfaz tipo tablero para proyectos en curso
-- Rediseño UI/UX para representar tareas pendientes y automáticas
-- Backups de ChromaDB y migraciones Django (`auth`, `sessions`...)
-
----
-
-## 🧠 Filosofía
-
-Mentor.ia busca ser un entorno de exploración, construcción y reflexión utilizando agentes LLM conectados entre sí. Su arquitectura modular permite escalar, modificar e integrar nuevos flujos fácilmente.
+- Visualización y edición de tareas en frontend
+- Validación de planes y transición de fases
+- Backup automático de embeddings y base de datos
+- Sistema de timeline para roadmaps
+- Refactor de `chroma_manager.py` para fallback seguro
+- Mejora de UI/UX general en frontend
 
 ---
 
-## 🤝 Licencia
+## 🤖 Filosofía del proyecto
 
-MIT – Libre para usar, modificar y compartir.
+Mentor.IA explora la **construcción colectiva**, la **gestión automatizada** y la **reflexión iterativa** mediante agentes inteligentes. Es un entorno modular, expandible y preparado para evolucionar en múltiples direcciones.
+
+---
+
+## 👥 Licencia
+
+MIT License — Libre para usar, modificar y compartir.
